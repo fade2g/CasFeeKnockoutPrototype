@@ -58,14 +58,14 @@
         </div>
 
         <div class="container">
-            <div class="row">
-                <div class="col-md-3">
+            <div  id="basicFormBinding" class="row">
+                <div class="col-md-4">
                     <h2>Basic form binding</h2>
                     <p>This section is the most simple knockout data binding</p>
                 </div>
                 <!-- This is the simple form -->
-                <div class="col-md-9">
-                    <h2>Input</h2>
+                <div class="col-md-8">
+                    <h3>Input</h3>
                     <div class="row ">
                         <form class="form-horizontal" role="form">
                             <div class="form-group">
@@ -87,7 +87,7 @@
                             </div>
                         </form>
                     </div>
-                    <h2>Output</h2>
+                    <h3>Output</h3>
                     <div class="row">
                         <div class="col-md-12">
                             <ol>
@@ -97,26 +97,110 @@
                         </div>
                     </div>
                 </div>
+                <!-- knockout business logic part for form binding -->
                 <script type="text/javascript">
                     var vmform = {
                         title: ko.observable(),
                         description: ko.observable()
                     };
-                    ko.applyBindings(vmform);
-
+                    ko.applyBindings(vmform, document.getElementById("basicFormBinding"));
                 </script>
             </div>
-            <div class="row">
-                <div class="col-md-12">
+            <!-- This is the nested array hendling part -->
+            <div id="nestedArray" class="row">
+                <div class="col-md-4">
+                    <h2>Nested Array</h2>
+                    <p>This section uses a nested array</p>
+                </div>
+                <div class="col-md-8">
+                    <ul data-bind="foreach: articles">
+                        <li>
+                            <div>
+                                <h3 data-bind="text: title"></h3>
+                                <p data-bind="text: description"></p>
+                                <a href="#" data-bind="click: addComment">Add comment</a>
+                            </div>
+                            <ul data-bind="foreach: comments">
+                                <li data-bind="text: $data"></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <script type="text/javascript">
+                // see http://knockoutjs.com/examples/collections.html
+                // Constructor for the objects with the nested array
+                var Article = function(title, description, comments) {
+                    this.title = title;
+                    this.description = description;
+                    // Add the comments provided as observables
+                    this.comments = ko.observableArray(comments);
+                    this.addComment = function() {
+                        this.comments.push("New comment");
+                    }.bind(this);
+                };
+                var nestedViewModel = {
+                    articles: [
+                        new Article("First article", "THis is the description", ["Comment 1.1", "Comment 1.2"]),
+                        new Article("Second article", "Description 2", ["Comment 2.1", "Comment 2.2"])
+                    ]
+                };
+                ko.applyBindings(nestedViewModel, document.getElementById("nestedArray"));
+            </script>
+            <div id="simpleArray" class="row">
+                <div class="col-md-4">
                     <h2>Simple array</h2>
                     <p>This section uses a simple array of objects</p>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <h2>Nested</h2>
-                    <p>This section uses a nested array</p>
+                <div class="col-md-8">
+                    <ul data-bind="foreach: items">
+                        <li data-bind="text: description"></li>
+                    </ul>
+                    <div data-bind="template: { name: 'arrayTemplate', foreach: items }"></div>
                 </div>
+                <!-- the template binds the effective data to the HTML output -->
+                <script type="text/html" id="arrayTemplate">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3 data-bind="text: title"></h3>
+                            <p data-bind="text: description"></p>
+                        </div>
+                    </div>
+                </script>
+                <!-- knockout business logic part form simple array tests -->
+                <script type="text/javascript">
+                    // Item constructor function
+                    var Item = function(title, description) {
+                        this.title = title;
+                        this.description = description;
+                    };
+                    // raw data in json notation
+                    var rawData = [
+                        {
+                            "title": "This is a first title",
+                            "description": "The initial description"
+                        },
+                        {
+                            "title": "The second title follows immediately",
+                            "description": "There ar now two descriptions as well."
+                        }
+                    ];
+                    // prepare the view model
+                    var viewModel = {
+                        items: []
+                    };
+                    // add item to the view model
+                    // for nested arrays it looks like the children mus be bound
+                    // see http://knockoutjs.com/examples/collections.html
+                    var i,
+                        singleItem;
+                    for (i = 0; i < rawData.length; i++ ) {
+                        singleItem = rawData[i];
+                        viewModel.items.push(new Item(singleItem.title, singleItem.description));
+                    }
+                    ko.applyBindings(viewModel, document.getElementById("simpleArray"));
+                </script>
+
             </div>
             <div class="row">
                 <div class="col-md-12">
