@@ -2,7 +2,7 @@
 <html class="no-js">
     <head>
         <meta charset="utf-8">
-        <title>KnockoutPrototype</title>
+        <title>KnockIn prototype</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -19,9 +19,6 @@
 
         <!-- build:js scripts/vendor/modernizr.js -->
         <script src="bower_components/modernizr/modernizr.js"></script>
-        <!-- bower:js -->
-        <script src="bower_components/knockoutjs/dist/knockout.js"></script>
-        <!-- endbower -->
         <!-- endbuild -->
 
     </head>
@@ -39,10 +36,10 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#">KnockoutPrototype</a>
+                    <a class="navbar-brand" href="#">KnockIn</a>
                 </div>
                 <div class="navbar-collapse collapse">
-                    <div class="navbar-brand pull-right">This is a sample usage of knockout</div>
+                    <div class="navbar-brand pull-right">No Knockout needed</div>
                 </div><!--/.navbar-collapse -->
             </div>
         </div>
@@ -50,172 +47,24 @@
         <!-- Main jumbotron for a primary marketing message or call to action -->
         <div class="jumbotron">
             <div class="container">
-                <h1>Bootstrap&Knockout</h1>
-                <p>This prototype page is just meant for testing the concepts for knockout and bootstrap.
-                I'll hope the figure out, how the stuff works, which  <span class="bg-success">classes</span> boostrap offers,
-                how hierarchical data in knockout can be <span class="bg-success">bound and updated</span>.</p>
+                <h1>Bootstrap w/o Knockout</h1>
+                <p>This prototype is to develop a library to achieve some of the concepts fo knockout (or maybge angular) to decouple
+                the data model from the view model. The following functionality looks like required</p>
+                <ul>
+                    <li>Bind properties of an object to a node (span, div, other)</li>
+                    <li>Handle some sort fo scope for nested objects</li>
+                    <li>Enable looping through arrays</li>
+                    <li>Allow event handlers for asynchronous updates</li>
+                    <li>Listeners to update the view model when data changes</li>
+                    <li>Looks like some really big library needed!</li>
+                </ul>
             </div>
         </div>
 
         <div class="container">
-            <div  id="basicFormBinding" class="row">
-                <div class="col-md-4">
-                    <h2>Basic form binding</h2>
-                    <p>This section is the most simple knockout data binding</p>
-                </div>
-                <!-- This is the simple form -->
-                <div class="col-md-8">
-                    <h3>Input</h3>
-                    <div class="row ">
-                        <form class="form-horizontal" role="form">
-                            <div class="form-group">
-                                <label for="input-title" class="col-sm-2 control-label">Title</label>
-                                <div class="col-sm-10">
-                                    <input id="input-title" type="text" placeholder="title" class="form-control" data-bind="value: title">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="input-description" class="col-sm-2 control-label">Description</label>
-                                <div class="col-sm-10">
-                                    <input id="input-description" type="text" placeholder="title" class="form-control" data-bind="value: description">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-sm-offset-2 col-sm-10">
-                                    <button type="submit" class="btn btn-default">Submit it!</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <h3>Output</h3>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <ol>
-                                <li><span data-bind="text: title"></span> </li>
-                                <li><span data-bind="text: description"></span> </li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-                <!-- knockout business logic part for form binding -->
-                <script type="text/javascript">
-                    var vmform = {
-                        title: ko.observable(),
-                        description: ko.observable()
-                    };
-                    ko.applyBindings(vmform, document.getElementById("basicFormBinding"));
-                </script>
+            <div  id="simpleStuff" class="row">
+                <div data-ki-bind="article.title" data-ki-produce="text"></div>
             </div>
-            <!-- This is the nested array hendling part -->
-            <div id="nestedArray" class="row">
-                <div class="col-md-4">
-                    <h2>Nested Array</h2>
-                    <p>This section uses a nested array</p>
-                </div>
-                <div class="col-md-8">
-                    <ul data-bind="foreach: articles">
-                        <li>
-                            <div>
-                                <h3 data-bind="text: title"></h3>
-                                <p data-bind="text: description"></p>
-                                <a href="#" data-bind="click: addComment">Add comment</a>
-                            </div>
-                            <ul data-bind="foreach: comments">
-                                <li data-bind="text: $data"></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <script type="text/javascript">
-                // see http://knockoutjs.com/examples/collections.html
-                // Constructor for the objects with the nested array
-                var Article = function(title, description, comments) {
-                    this.title = title;
-                    this.description = description;
-                    // Add the comments provided as observables
-                    this.comments = ko.observableArray(comments);
-                    this.addComment = function() {
-                        this.comments.push("New comment");
-                    }.bind(this);
-                };
-                var nestedViewModel = {
-                    articles: [
-                        new Article("First article", "THis is the description", ["Comment 1.1", "Comment 1.2"]),
-                        new Article("Second article", "Description 2", ["Comment 2.1", "Comment 2.2"])
-                    ]
-                };
-                ko.applyBindings(nestedViewModel, document.getElementById("nestedArray"));
-            </script>
-            <div id="simpleArray" class="row">
-                <div class="col-md-4">
-                    <h2>Simple array</h2>
-                    <p>This section uses a simple array of objects</p>
-                </div>
-                <div class="col-md-8">
-                    <ul data-bind="foreach: items">
-                        <li data-bind="text: description"></li>
-                    </ul>
-                    <div data-bind="template: { name: 'arrayTemplate', foreach: items }"></div>
-                </div>
-                <!-- the template binds the effective data to the HTML output -->
-                <script type="text/html" id="arrayTemplate">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h3 data-bind="text: title"></h3>
-                            <p data-bind="text: description"></p>
-                        </div>
-                    </div>
-                </script>
-                <!-- knockout business logic part form simple array tests -->
-                <script type="text/javascript">
-                    // Item constructor function
-                    var Item = function(title, description) {
-                        this.title = title;
-                        this.description = description;
-                    };
-                    // raw data in json notation
-                    var rawData = [
-                        {
-                            "title": "This is a first title",
-                            "description": "The initial description"
-                        },
-                        {
-                            "title": "The second title follows immediately",
-                            "description": "There ar now two descriptions as well."
-                        }
-                    ];
-                    // prepare the view model
-                    var viewModel = {
-                        items: []
-                    };
-                    // add item to the view model
-                    // for nested arrays it looks like the children mus be bound
-                    // see http://knockoutjs.com/examples/collections.html
-                    var i,
-                        singleItem;
-                    for (i = 0; i < rawData.length; i++ ) {
-                        singleItem = rawData[i];
-                        viewModel.items.push(new Item(singleItem.title, singleItem.description));
-                    }
-                    ko.applyBindings(viewModel, document.getElementById("simpleArray"));
-                </script>
-
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <h2>Nested forms</h2>
-                    <p>This section uses a nested forms in nested array</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <h2>Event handling</h2>
-                    <p>This section uses custom event handling</p>
-                </div>
-            </div>
-
-            <hr>
 
             <footer>
                 <p>&copy; Company 2014</p>
@@ -244,6 +93,8 @@
         <script src="bower_components/bootstrap/js/tab.js"></script>
         <!-- endbuild -->
 
+        <!-- build:js scripts/kickin.js -->
+        <script src="scripts/kickin.js"></script>
         <!-- build:js scripts/main.js -->
         <script src="scripts/main.js"></script>
         <!-- endbuild -->
