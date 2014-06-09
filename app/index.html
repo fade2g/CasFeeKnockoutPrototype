@@ -61,10 +61,26 @@
             </div>
         </div>
 
+        <script id="helloWorldTemplate" type="kickin/template">
+            <p>hello world, title is {{article.title}}</p>
+        </script>
+
+        <script id="looper" type="kickin/template">
+            <li>{{text}}</li>
+        </script>
+
         <div class="container">
             <div  id="simpleStuff" class="row">
                 <div data-ki-bind="article.title" data-ki-produce="text"></div>
             </div>
+
+            <div id="insertHere" data-ki-template="helloWorldTemplate">
+                <p>replace me now</p>
+            </div>
+
+            <ul id="insertLoopHere" data-ki-template="looper" data-ki-foreach="article.comments">
+                <li>replace me now</li>
+            </ul>
 
             <footer>
                 <p>&copy; Company 2014</p>
@@ -94,9 +110,13 @@
         <!-- endbuild -->
 
         <!-- build:js scripts/kickin.js -->
-        <script src="scripts/kickin.js"></script>
+        <!-- script src="scripts/kickin.js"></script -->
+        <!-- endbuild -->
+        <!-- build:js scripts/kickin.js -->
+        <script src="scripts/templater.js"></script>
+        <!-- endbuild -->
         <!-- build:js scripts/main.js -->
-        <script src="scripts/main.js"></script>
+        <!-- script src="scripts/main.js"></script -->
         <!-- endbuild -->
 </body>
 </html>
