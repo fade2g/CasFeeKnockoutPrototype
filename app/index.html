@@ -48,7 +48,7 @@
         <div class="jumbotron">
             <div class="container">
                 <h1>Bootstrap w/o Knockout</h1>
-                <p>This prototype is to develop a library to achieve some of the concepts fo knockout (or maybge angular) to decouple
+                <p>This prototype is to develop a library to achieve some of the concepts fo knockout (or maybe angular) to decouple
                 the data model from the view model. The following functionality looks like required</p>
                 <ul>
                     <li>Bind properties of an object to a node (span, div, other)</li>
@@ -66,7 +66,15 @@
         </script>
 
         <script id="looper" type="kickin/template">
-            <li>{{text}}</li>
+            <li><span data-ki-handler="click:ki.handler.alert">show {{text}}</span></li>
+        </script>
+
+        <script id="recursiveTemplate" type="kickin/template">
+            <p>This template applies a nested template:</p>
+            <ul id="insertLoopHere" data-ki-template="looper" data-ki-foreach="article.comments">
+                <li>replace me now</li>
+            </ul>
+            <p>finished applying</p>
         </script>
 
         <div class="container">
@@ -78,9 +86,12 @@
                 <p>replace me now</p>
             </div>
 
-            <ul id="insertLoopHere" data-ki-template="looper" data-ki-foreach="article.comments">
+            <ul data-ki-template="looper" data-ki-foreach="article.comments">
                 <li>replace me now</li>
             </ul>
+
+            <p>An now the loop</p>
+            <div id="nestedLoop" data-ki-template="recursiveTemplate"><p>Will be removed</p></div>
 
             <footer>
                 <p>&copy; Company 2014</p>
@@ -113,7 +124,9 @@
         <!-- script src="scripts/kickin.js"></script -->
         <!-- endbuild -->
         <!-- build:js scripts/kickin.js -->
+        <script src="scripts/kickin.handler.js"></script>
         <script src="scripts/templater.js"></script>
+
         <!-- endbuild -->
         <!-- build:js scripts/main.js -->
         <!-- script src="scripts/main.js"></script -->

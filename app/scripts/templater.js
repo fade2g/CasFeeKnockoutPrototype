@@ -158,6 +158,56 @@ ki.init = function() {
     }
 
     /**
+     * Walk the dom function taken from
+     * http://www.javascriptcookbook.com/article/Traversing-DOM-subtrees-with-a-recursive-walk-the-DOM-function
+     * @param node {node} An HTML node
+     * @param func {function} a function to be called
+     * @param context {object} an object with the scoped variable
+     */
+    function walkTheDOM(node, func, context) {
+        func(node, context);
+        node = node.firstChild;
+        while (node) {
+            walkTheDOM(node, func, context);
+            node = node.nextSibling;
+        }
+    }
+
+    /**
+     * This function attaches the handlers defined in the node via data-ki-handler
+     * @param node
+     * @param context
+     */
+    function applyHandlers(node, context) {
+        var handlerDescription,
+            handlerParts,
+            eventName,
+            eventFunction,
+            self;
+        self = this;
+        self.context = context;
+        if(node && node.nodeType === 1 && node.getAttribute('data-ki-handler')) {
+            handlerDescription = node.getAttribute('data-ki-handler');
+            if (handlerDescription) {
+                handlerParts = handlerDescription.split(':');
+                eventName = handlerParts[0];
+                eventFunction = ki.handler.buildFunction(context, handlerParts[1]); // Function(handlerParts[1]);
+                if (node.addEventListener) {  // all browsers except IE before version 9
+                    node.addEventListener(eventName, function() { eventFunction()}, false);
+                } else {
+                    if (node.attachEvent) {   // IE before version 9
+                        node.attachEvent(eventName, eventFunction() );
+                    }
+                }
+            }
+        }
+    }
+
+    function setEventHandler(node, context) {
+        walkTheDOM(node, applyHandlers, context);
+    }
+
+    /**
      * This function binds data object to some internal data structure for applying to the template
      * @param modelName {String} name of the model to be used in the templates
      * @param data {Object} some data structure that provides the real data to be applied to the templates
@@ -255,6 +305,7 @@ ki.init = function() {
                     nodeText = applyBindings(dummyData, self.templates[templateName]);
                 }
                 templatedNode.getNode().innerHTML = nodeText;
+                setEventHandler(templatedNode.getNode(), dummyData);
             }
             i--;
         }
